@@ -1,0 +1,26 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+
+replicas:
+  - name: frontend
+    count: 1
+  - name: bff
+    count: 1
+  - name: user-service
+    count: 1
+  - name: message-service
+    count: 1
+
+patches:
+  - target:
+      kind: PersistentVolume
+      name: s3-pv
+    patch: |-
+      - op: remove
+        path: /spec/csi
+      - op: add
+        path: /spec/hostPath
+        value:
+          path: /tmp/s3-local-data

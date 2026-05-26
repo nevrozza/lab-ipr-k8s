@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+
+replicas:
+  - name: frontend
+    count: 3
+  - name: bff
+    count: 3
+  - name: user-service
+    count: 3
+  - name: message-service
+    count: 3
