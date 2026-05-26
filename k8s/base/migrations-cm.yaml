@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-migrations-cm
+  namespace: messager-app
+data:
+  001_init_users.sql: |
+    -- +goose Up
+    CREATE TABLE IF NOT EXISTS users (
+        id VARCHAR(255) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    -- +goose Down
+    DROP TABLE IF EXISTS users;
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: messages-migrations-cm
+  namespace: messager-app
+data:
+  001_init_messages.sql: |
+    -- +goose Up
+    CREATE TABLE IF NOT EXISTS messages (
+        id VARCHAR(255) PRIMARY KEY,       -- ИСПРАВЛЕНО: UUID сообщения
+        sender_id VARCHAR(255) NOT NULL,
+        receiver_id VARCHAR(255) NOT NULL,
+        text TEXT,                         -- ИСПРАВЛЕНО: 'text' вместо 'content'
+        file_id VARCHAR(255),              -- НОВОЕ: ID файла из S3
+        file_name VARCHAR(255),            -- НОВОЕ: имя файла
+        edited BOOLEAN DEFAULT false,      -- НОВОЕ: флаг редактирования
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+    -- +goose Down
+    DROP TABLE IF EXISTS messages;
