@@ -1,0 +1,163 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service
+  namespace: messager-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+        workload: app
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: workload
+                    operator: In
+                    values: ["app"]
+      containers:
+        - name: user-service
+          image: mablinov2704/user-service:latest
+          env:
+            - name: HTTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: messager-config
+                  key: USER_HTTP_PORT
+            - name: DB_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: messager-db-secret
+                  key: USER_DB_DSN
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  namespace: messager-app
+spec:
+  selector:
+    app: user-service
+  ports:
+    - name: http
+      port: 8081
+      targetPort: 8081
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bff
+  namespace: messager-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  template:
+    metadata:
+      labels:
+        app: bff
+        workload: app
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: workload
+                    operator: In
+                    values: ["app"]
+      containers:
+        - name: bff
+          image: mablinov2704/bff:latest
+          env:
+            - name: HTTP_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: messager-config
+                  key: BFF_HTTP_PORT
+            - name: USER_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: messager-config
+                  key: USER_SERVICE_URL
+            - name: MSG_SERVICE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: messager-config
+                  key: MSG_SERVICE_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bff
+  namespace: messager-app
+spec:
+  selector:
+    app: bff
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  namespace: messager-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+        workload: app
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: workload
+                    operator: In
+                    values: ["app"]
+      containers:
+        - name: frontend
+          image: mablinov2704/frontend:latest
+          env:
+            - name: BFF_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: messager-config
+                  key: FRONTEND_BFF_URL
+            - name: BFF_INTERNAL_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: messager-config
+                  key: FRONTEND_BFF_INTERNAL_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  namespace: messager-app
+spec:
+  selector:
+    app: frontend
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
