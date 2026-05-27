@@ -23,15 +23,24 @@ data:
   001_init_messages.sql: |
     -- +goose Up
     CREATE TABLE IF NOT EXISTS messages (
-        id VARCHAR(255) PRIMARY KEY,       -- ИСПРАВЛЕНО: UUID сообщения
+        id VARCHAR(255) PRIMARY KEY,
         sender_id VARCHAR(255) NOT NULL,
         receiver_id VARCHAR(255) NOT NULL,
-        text TEXT,                         -- ИСПРАВЛЕНО: 'text' вместо 'content'
-        file_id VARCHAR(255),              -- НОВОЕ: ID файла из S3
-        file_name VARCHAR(255),            -- НОВОЕ: имя файла
-        edited BOOLEAN DEFAULT false,      -- НОВОЕ: флаг редактирования
+        text TEXT,
+        file_id VARCHAR(255),
+        file_name VARCHAR(255),
+        edited BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
+
+    CREATE TABLE IF NOT EXISTS files (
+        id VARCHAR(255) PRIMARY KEY,
+        orig_name VARCHAR(255) NOT NULL,
+        content_type VARCHAR(255) NOT NULL,
+        path VARCHAR(255) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
     -- +goose Down
     DROP TABLE IF EXISTS messages;
+    DROP TABLE IF EXISTS files;
