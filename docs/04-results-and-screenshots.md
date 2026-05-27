@@ -10,6 +10,16 @@
   <img width="801" height="500" alt="image" src="./argocd-details-dev-02.jpg" />
 </p>
 
+
+### Argo CD (`Local Prod`)
+<p align="center">
+  <img width="522" height="500" alt="image" src="./argocd-dashboard-local-prod.jpg" />
+</p>
+
+<p align="center">
+  <img width="608" height="374" alt="image" src="./argocd-infinity-progressing.jpg" />
+</p>
+
 ### Интерфейс приложения и отправка сообщений
 Приложение успешно запущено. Авторизация пользователей и отправка текстовых сообщений, а также файлов (картинок) работают без ошибок.
 
