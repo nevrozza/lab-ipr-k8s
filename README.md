@@ -73,8 +73,7 @@ kubectl port-forward svc/argocd-server -n argocd 8085:443
 ---
 
 ## Навигация по детальной документации (docs/)
-* [**docs/01-architecture-and-database.md**](./docs/01-architecture-and-database.md) — Сетевая связность, детальные схемы баз данных и решение проблемы коллизии миграций.
-* [**docs/02-node-affinity-and-storage.md**](./docs/02-node-affinity-and-storage.md) — Настройка распределения нагрузок (Affinity), работа с хранилищем файлов (S3 CSI) и решение проблем с правами локальной ФС.
-* [**docs/03-kustomize-and-gitops.md**](./docs/03-kustomize-and-gitops.md) — Разделение сред через Kustomize, автоматизация через Argo CD и скриншоты работающей системы.
-
----
+* [**docs/01-architecture-and-database.md**](./docs/01-architecture-and-database.md) – Сетевая связность, детальные схемы баз данных и решение проблемы коллизии миграций.
+* [**docs/02-node-affinity-and-storage.md**](./docs/02-node-affinity-and-storage.md) – Настройка распределения нагрузок (Affinity), работа с хранилищем файлов (S3 CSI) и решение проблем с правами локальной ФС.
+* [**docs/03-kustomize-and-gitops.md**](./docs/03-kustomize-and-gitops.md) – Разделение сред через Kustomize, автоматизация через Argo CD и скриншоты работающей системы.
+* [**docs/04-results-and-screenshots.md**](./docs/04-results-and-screenshots.md) – Скриншоты и пруфы, что всё работает!
