@@ -32,6 +32,8 @@ spec:
       containers:
         - name: message-service
           image: mablinov2704/message-service:latest
+          ports:
+            - containerPort: 8082
           env:
             - name: HTTP_PORT
               valueFrom:
@@ -51,6 +53,25 @@ spec:
           volumeMounts:
             - name: uploads
               mountPath: /app/uploads
+          readinessProbe:
+            httpGet:
+              path: /api/v1/messages
+              port: 8082
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1/messages
+              port: 8082
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "192Mi"
+            limits:
+              cpu: "300m"
+              memory: "384Mi"
       volumes:
         - name: uploads
           persistentVolumeClaim:

@@ -16,7 +16,7 @@ replicas:
 patches:
   - target:
       kind: PersistentVolume
-      name: s3-pv
+      name: s3-pv-uploads
     patch: |-
       - op: remove
         path: /spec/csi
@@ -24,3 +24,13 @@ patches:
         path: /spec/hostPath
         value:
           path: /tmp/s3-local-data
+
+  - target:
+      kind: Deployment
+      name: message-service
+    patch: |-
+      - op: replace
+        path: /spec/template/spec/volumes/0
+        value:
+          name: uploads
+          emptyDir: {}
