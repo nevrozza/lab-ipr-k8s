@@ -12,6 +12,9 @@
 
 
 ### Argo CD (`Local Prod`)
+
+При попытке запустить прод локально всё заедат в ожидании монтирования диска – вся проблема в том, что локально нет доступа к s3 =(
+
 <p align="center">
   <img width="522" height="500" alt="image" src="./argocd-dashboard-local-prod.jpg" />
 </p>
