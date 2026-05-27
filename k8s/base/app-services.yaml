@@ -26,6 +26,8 @@ spec:
       containers:
         - name: user-service
           image: mablinov2704/user-service:latest
+          ports:
+            - containerPort: 8081
           env:
             - name: HTTP_PORT
               valueFrom:
@@ -37,6 +39,25 @@ spec:
                 secretKeyRef:
                   name: messager-db-secret
                   key: USER_DB_DSN
+          readinessProbe:
+            httpGet:
+              path: /api/v1/users
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/v1/users
+              port: 8081
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "192Mi"
+            limits:
+              cpu: "300m"
+              memory: "384Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -79,6 +100,8 @@ spec:
       containers:
         - name: bff
           image: mablinov2704/bff:latest
+          ports:
+            - containerPort: 8080
           env:
             - name: HTTP_PORT
               valueFrom:
@@ -95,6 +118,25 @@ spec:
                 configMapKeyRef:
                   name: messager-config
                   key: MSG_SERVICE_URL
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "150m"
+              memory: "192Mi"
+            limits:
+              cpu: "300m"
+              memory: "384Mi"
 ---
 apiVersion: v1
 kind: Service
@@ -137,6 +179,8 @@ spec:
       containers:
         - name: frontend
           image: mablinov2704/frontend:latest
+          ports:
+            - containerPort: 80
           env:
             - name: BFF_URL
               valueFrom:
@@ -148,6 +192,25 @@ spec:
                 configMapKeyRef:
                   name: messager-config
                   key: FRONTEND_BFF_INTERNAL_URL
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
 ---
 apiVersion: v1
 kind: Service
